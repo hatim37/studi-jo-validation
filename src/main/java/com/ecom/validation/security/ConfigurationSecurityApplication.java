@@ -26,7 +26,7 @@ import java.util.Arrays;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class ConfigurationSecurityApplication {
 
-    private JwtConfig jwtConfig;
+    private final JwtConfig jwtConfig;
 
     public ConfigurationSecurityApplication(JwtConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
@@ -59,6 +59,7 @@ public class ConfigurationSecurityApplication {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/validation-newSend")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/activation-send")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

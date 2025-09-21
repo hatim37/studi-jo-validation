@@ -65,10 +65,7 @@ public class ValidationService {
         return ResponseEntity.ok(validation);
     }
 
-    //lire le code de validation
-    public Validation readCode(String code){
-       return this.validationRepository.findByCode(code).orElseThrow(() -> new UserNotFoundException("Votre code est invalide"));
-    }
+
 
     @Scheduled(cron= "@weekly")
     public void removeCode() {
@@ -79,7 +76,7 @@ public class ValidationService {
     public ResponseEntity<?> sendNewCode(Long id) {
         //on recherche l'utilisateur
         Validation validation = this.validationRepository.findById(id).orElseThrow(()-> new UserNotFoundException("Utilisateur introuvable"));
-        //on verifie si le compte n'est pas actif
+        //on vérifie si le compte n'est pas actif
         if (!validation.getActive()){
             //on change le code
             Random random = new Random();
