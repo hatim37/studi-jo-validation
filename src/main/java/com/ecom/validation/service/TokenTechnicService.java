@@ -3,9 +3,13 @@ package com.ecom.validation.service;
 
 
 import com.ecom.validation.clients.SecurityRestClient;
+import com.ecom.validation.dto.LoginActivationDto;
 import com.ecom.validation.dto.TokenTechnicDto;
+import com.ecom.validation.response.UserNotFoundException;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -41,10 +45,18 @@ public class TokenTechnicService {
         String form = "grant_type=client_credentials&scope=users:read";
 
         // 3) Appel Feign
-        TokenTechnicDto resp = securityRestClient.getTokenTechnic(basicAuth, form);
+        //TokenTechnicDto resp = securityRestClient.getTokenTechnic(basicAuth, form);
+
 
         // 4) Retourne l’access_token (ou null si fallback)
-        return resp == null ? null : resp.accessToken();
+        //return resp == null ? null : resp.accessToken();
+
+        try {
+            TokenTechnicDto resp = securityRestClient.getTokenTechnic(basicAuth, form);
+            return resp == null ? null : resp.accessToken();
+        } catch (FeignException e) {
+            throw new UserNotFoundException("Service Token indisponible");
+        }
     }
 
 

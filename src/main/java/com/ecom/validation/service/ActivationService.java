@@ -1,5 +1,6 @@
 package com.ecom.validation.service;
 
+import com.ecom.validation.clients.SecurityRestClient;
 import com.ecom.validation.clients.UserRestClient;
 import com.ecom.validation.dto.LoginActivationDto;
 import com.ecom.validation.entity.Validation;
@@ -18,11 +19,13 @@ public class ActivationService {
     private final ValidationRepository validationRepository;
     private final UserRestClient userRestUser;
     private final TokenTechnicService tokenTechnicService;
+    private final SecurityRestClient securityRestClient;
 
-    public ActivationService(UserRestClient userRestUser, ValidationRepository validationRepository, TokenTechnicService tokenTechnicService) {
+    public ActivationService(UserRestClient userRestUser, ValidationRepository validationRepository, TokenTechnicService tokenTechnicService, SecurityRestClient securityRestClient) {
         this.userRestUser = userRestUser;
         this.validationRepository = validationRepository;
         this.tokenTechnicService = tokenTechnicService;
+        this.securityRestClient = securityRestClient;
     }
 
     public ResponseEntity<?> activation(String code, String password) {
@@ -50,9 +53,22 @@ public class ActivationService {
                 return ResponseEntity.ok("Votre est compte est activé !");
             } else {throw new UserNotFoundException("Service indisponible");}
         }
+
+        if(controlValid.getType().contains("deviceId")){
+            ResponseEntity<Void> resp = this.securityRestClient.activationLogin("Bearer "+this.tokenTechnicService.getTechnicalToken(),new LoginActivationDto(validation.getUserId(), validation.getDeviceId(), validation.getActive()));
+
+            if (resp.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.ok("Votre appareil est validé !");
+            } else {
+                throw new UserNotFoundException("Service indisponible");
+            }
+        }
+
         else {
             throw new UserNotFoundException("Erreur, veuillez réessayer");
         }
+
+
 
     }
 
