@@ -2,6 +2,7 @@ package com.ecom.validation.service;
 
 import com.ecom.validation.clients.SecurityRestClient;
 import com.ecom.validation.clients.UserRestClient;
+import com.ecom.validation.dto.ActivPasswordDto;
 import com.ecom.validation.dto.LoginActivationDto;
 import com.ecom.validation.entity.Validation;
 import com.ecom.validation.repository.ValidationRepository;
@@ -64,12 +65,18 @@ public class ActivationService {
             }
         }
 
+        if(controlValid.getType().contains("editPassword")){
+            ResponseEntity<Void> resp = this.userRestUser.activationPassword("Bearer "+this.tokenTechnicService.getTechnicalToken(),new ActivPasswordDto(validation.getUserId(), password));
+            if (resp.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.ok("Votre mot de passe a été modifié avec succès !");
+            } else {
+                throw new UserNotFoundException("Service indisponible");
+            }
+        }
+
         else {
             throw new UserNotFoundException("Erreur, veuillez réessayer");
         }
-
-
-
     }
 
     //lire le code de validation
