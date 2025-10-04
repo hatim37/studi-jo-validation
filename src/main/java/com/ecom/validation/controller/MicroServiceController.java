@@ -27,7 +27,6 @@ public class MicroServiceController {
 
     @PostMapping(path = "/_internal/validation-send")
     public ResponseEntity<Validation> sendCode(@RequestBody ValidationDto validationDto) {
-        log.info("demande validation recu");
         return this.validationService.save(validationDto);
     }
 

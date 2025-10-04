@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-@Slf4j
+
 @AllArgsConstructor
 @RestController
 public class ActivationController {
@@ -20,7 +20,6 @@ public class ActivationController {
     public ResponseEntity<?> validCode(@RequestBody Map<String, String> code) {
         String activationCode = code.get("code");
         String password = code.get("password");
-        log.info("code recu :"+activationCode);
         return ResponseEntity.ok().body(this.activationService.activation(activationCode, password));
     }
 
