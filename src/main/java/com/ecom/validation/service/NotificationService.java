@@ -28,23 +28,20 @@ public class NotificationService {
         if (validationDto.getType().equals("registration")) {
             subject = "Votre code d'activation";
             texte = String.format("Bonjour "+username+","+"\n\nVotre code d'activation est "+code+".\n\nA bientôt.");
-            log.info(texte);
         }
         if (validationDto.getType().equals("editPassword")) {
             subject ="Réinitialiser votre mot de passe";
             texte = String.format("Bonjour "+username+","+"\n\nVotre code de réinitialisation est "+code+".\n\nA bientôt.");
-            log.info(texte);
         }
         if (validationDto.getType().equals("deviceId")) {
             subject ="Votre code de connexion";
             texte = String.format("Bonjour "+username+","+"\n\nVotre code de connexion est "+code+".\n\nA bientôt.");
-            log.info(texte);
         }
+        log.info("VOTRE MAIL CONTIENT [{}] -> {}", subject, texte);
 
         // Vérifie si le profil actif est "local"
-        if (Arrays.asList(environment.getActiveProfiles()).contains("local")) {
-            log.info("SIMULATION MAIL [{}] -> {}", subject, texte);
-        } else {
+        if (Arrays.asList(environment.getActiveProfiles()).contains("cloud")) {
+
             // Envoi réel
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("no-reply@hatim.tech");

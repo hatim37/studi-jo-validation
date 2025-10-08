@@ -8,11 +8,12 @@ import com.ecom.validation.entity.Validation;
 import com.ecom.validation.repository.ValidationRepository;
 import com.ecom.validation.response.UserNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-
+@Slf4j
 @Service
 @Transactional
 public class ActivationService {
@@ -47,7 +48,6 @@ public class ActivationService {
         //on envoi la requete au microservice
         assert controlValid != null;
 
-
        if(controlValid.getType().contains("registration")){
             ResponseEntity<Void> resp = this.userRestUser.activationUsers("Bearer "+this.tokenTechnicService.getTechnicalToken(),new LoginActivationDto(validation.getUserId(), null, validation.getActive()));
             if (resp.getStatusCode().is2xxSuccessful()) {
@@ -57,7 +57,6 @@ public class ActivationService {
 
         if(controlValid.getType().contains("deviceId")){
             ResponseEntity<Void> resp = this.securityRestClient.activationLogin("Bearer "+this.tokenTechnicService.getTechnicalToken(),new LoginActivationDto(validation.getUserId(), validation.getDeviceId(), validation.getActive()));
-
             if (resp.getStatusCode().is2xxSuccessful()) {
                 return ResponseEntity.ok("Votre appareil est validé !");
             } else {
