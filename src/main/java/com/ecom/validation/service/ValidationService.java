@@ -95,7 +95,7 @@ public class ValidationService {
             this.notificationService.send(new ValidationDto(validation.getUserId(), validation.getUsername(), validation.getDeviceId(), validation.getEmail(), validation.getType()), code);
             return ResponseEntity.status(HttpStatus.CREATED).body("Votre code a été envoyé");
         } else {
-            return ResponseEntity.ok("Le code a déja été validé");
+            return ResponseEntity.ok("Le code a déjà été validé");
         }
     }
 }
